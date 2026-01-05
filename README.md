@@ -132,7 +132,3 @@ Run the app:
 ./mvnw test
 ```
 
-Notes:
-- Integration tests using Testcontainers are annotated with `disabledWithoutDocker = true` and will be skipped if Docker isn’t available.
-
-
