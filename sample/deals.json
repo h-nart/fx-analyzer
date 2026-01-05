@@ -1,0 +1,18 @@
+[
+  {
+    "dealId": "D-10001",
+    "fromCurrency": "USD",
+    "toCurrency": "EUR",
+    "timestamp": "2026-01-05T10:15:30Z",
+    "amount": "1000.50"
+  },
+  {
+    "dealId": "D-10002",
+    "fromCurrency": "GBP",
+    "toCurrency": "USD",
+    "timestamp": "2026-01-05T12:00:00Z",
+    "amount": "250.00"
+  }
+]
+
+
