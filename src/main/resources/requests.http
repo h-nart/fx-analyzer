@@ -1,0 +1,92 @@
+### Happy path import (sample deals)
+POST http://localhost:8080/api/v1/deals/import
+Content-Type: application/json
+
+[
+  {
+    "dealId": "D-10001",
+    "fromCurrency": "USD",
+    "toCurrency": "EUR",
+    "timestamp": "2026-01-05T10:15:30Z",
+    "amount": "1000.50"
+  },
+  {
+    "dealId": "D-10002",
+    "fromCurrency": "GBP",
+    "toCurrency": "USD",
+    "timestamp": "2026-01-05T12:00:00Z",
+    "amount": "250.00"
+  }
+]
+
+### Happy path import (one deal)
+POST http://localhost:8080/api/v1/deals/import
+Content-Type: application/json
+
+[
+  {
+    "dealId": "D-10003",
+    "fromCurrency": "USD",
+    "toCurrency": "EUR",
+    "timestamp": "2026-01-05T10:15:30Z",
+    "amount": "1500.75"
+  }
+]
+
+### Idempotency: run the same request again (should return DUPLICATE)
+POST http://localhost:8080/api/v1/deals/import
+Content-Type: application/json
+
+[
+  {
+    "dealId": "D-10001",
+    "fromCurrency": "USD",
+    "toCurrency": "EUR",
+    "timestamp": "2026-01-05T10:15:30Z",
+    "amount": "1000.50"
+  },
+  {
+    "dealId": "D-10002",
+    "fromCurrency": "GBP",
+    "toCurrency": "USD",
+    "timestamp": "2026-01-05T12:00:00Z",
+    "amount": "250.00"
+  }
+]
+
+### No rollback: one valid + one invalid (negative amount)
+POST http://localhost:8080/api/v1/deals/import
+Content-Type: application/json
+
+[
+  {
+    "dealId": "D-20001",
+    "fromCurrency": "USD",
+    "toCurrency": "EUR",
+    "timestamp": "2026-01-05T10:15:30Z",
+    "amount": "10.00"
+  },
+  {
+    "dealId": "D-20002",
+    "fromCurrency": "USD",
+    "toCurrency": "EUR",
+    "timestamp": "2026-01-05T10:15:31Z",
+    "amount": "-1.00"
+  }
+]
+
+### Invalid/Malformed JSON (should be 400)
+POST http://localhost:8080/api/v1/deals/import
+Content-Type: application/json
+
+{
+    "wrongRequest": "wrong data"
+
+
+### Wrong shape (object instead of array) (should be 400)
+POST http://localhost:8080/api/v1/deals/import
+Content-Type: application/json
+
+{
+  "dealId": "D-1"
+}
