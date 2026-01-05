@@ -1,5 +1,17 @@
 # Analyzer (FX Deals Import)
 
+## Design Choices
+
+- **PostgreSQL + Docker Compose**: reproducible local setup with real DB.
+- **Simple schema initialization**: uses `schema.sql` on startup to create the `deals` table + indexes deterministically.
+- **Idempotency / dedupe**: enforced at the DB layer via a **unique index on `deal_id`**, so the same deal can’t be imported twice (even across restarts).
+- **No rollback semantics**: batch import processes rows **one-by-one**, returning per-row outcomes so valid rows persist even if other rows fail.
+- **Validation**: Bean Validation on request DTO + ISO currency validation to show a scalable validation approach.
+- **Error handling**: malformed JSON / wrong request shape returns **HTTP 400**; otherwise returns `200` with per-row results.
+- **Logging**: per-row warnings and a batch summary for traceability during imports.
+- **Lombok**: used to reduce boilerplate and keep the code more declarative/readable (`@Slf4j`, `@RequiredArgsConstructor`, etc.).
+- **Coverage**: JaCoCo report (via `./mvnw verify`) shows **~91% instruction coverage** and **~85% branch coverage**.
+
 ## Run (recommended): Docker Compose
 
 Prereqs:
